@@ -13,7 +13,22 @@ CORS(app)
 def hello_world():  # put application's code here
     return 'Hello World!'
 
-
+@app.route("/predict", methods=["POST"])
+def predict():
+    input = np.zeros(n_items).reshape(1,-1)
+    if request.get_json():
+        data = request.get_json()
+        for i in data['data']:
+            input[0][i] = 1
+        input = input.astype('float32')
+        X = torch.FloatTensor(input)
+        model_VAE.eval()
+        logits_vad, KL = model_VAE(X)
+        logits_vad, idx = torch.sort(logits_vad, descending= True)
+        print(logits_vad[0][0:50])
+        print(idx[0][0:40].tolist())
+        result = {"data":idx[0][0:40].tolist() }
+    return jsonify({"result":result})
 if __name__ == '__main__':
     state_dict = torch.load('model_VAE_final.pth', map_location=torch.device('cpu'))
     encoder_dims = [n_items, 600, 200]

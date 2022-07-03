@@ -4,15 +4,7 @@ import torch.nn as nn
 from scipy import  sparse
 n_items = 20108
 n_users = 116677
-def load_train_data(csv_file):
-    tp = pd.read_csv(csv_file)
-    n_users = tp['uid'].max() + 1
 
-    rows, cols = tp['uid'], tp['sid']
-    data = sparse.csr_matrix((np.ones_like(rows),
-                             (rows, cols)), dtype='float64',
-                             shape=(n_users, n_items))
-    return data
 class Encoder(nn.Module):
     def __init__(self,  dropout=0.5, encoder_dims=[20108, 600, 200]):
         super(Encoder, self).__init__()
@@ -81,4 +73,4 @@ class MultiVAE(nn.Module):
 
         return logits, KL
 if __name__ == '__main__':
-    load_train_data("train.csv")
+ pass

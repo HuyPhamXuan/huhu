@@ -4,7 +4,7 @@ import torch.nn as nn
 from scipy import  sparse
 n_items = 20108
 n_users = 116677
-
+model_VAE = None
 class Encoder(nn.Module):
     def __init__(self,  dropout=0.5, encoder_dims=[20108, 600, 200]):
         super(Encoder, self).__init__()
@@ -72,5 +72,10 @@ class MultiVAE(nn.Module):
         logits = self.decoder.forward(sampled_z)
 
         return logits, KL
-if __name__ == '__main__':
- pass
+
+
+state_dict = torch.load('model_VAE_final.pth', map_location=torch.device('cpu'))
+encoder_dims = [n_items, 600, 200]
+decoder_dims = [200, 600, n_items]
+model_VAE = MultiVAE(encoder_dims=encoder_dims, decoder_dims=decoder_dims)
+model_VAE.load_state_dict(state_dict)

@@ -73,7 +73,6 @@ class MultiVAE(nn.Module):
 
         return logits, KL
 
-
 state_dict = torch.load('model_VAE_final.pth', map_location=torch.device('cpu'))
 encoder_dims = [n_items, 600, 200]
 decoder_dims = [200, 600, n_items]
